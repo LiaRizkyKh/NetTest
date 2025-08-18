@@ -1,0 +1,46 @@
+﻿body {
+    min-height: 100vh;
+    background: #f5f7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: max-content;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,.07);
+}
+
+.login-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 18px rgba(0,0,0,.1);
+}
+
+.form-control {
+    padding: .75rem 1rem;
+    border-radius: .75rem;
+}
+
+.btn-signin {
+    padding: .75rem 1rem;
+    border-radius: .75rem;
+}
+
+.link-muted {
+    text-decoration: none;
+    color: #6c757d;
+}
+
+    .link-muted:hover {
+        color: #0d6efd;
+    }

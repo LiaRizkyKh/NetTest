@@ -1,0 +1,39 @@
+﻿@model NetTestMayapada.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Beranda";
+}
+
+<div class="container mt-5 mb-3">
+    <div class="card shadow-lg p-4 mx-3">
+        <h2>Beranda</h2>
+        <div class="row align-items-center">
+            <div class="col-md-4 text-center">
+                <img src="~/images/default-profile.png" alt="Profile Picture"
+                     class="img-fluid rounded-circle mb-3" style="max-width: 200px;" />
+            </div>
+
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label class="form-label">Nama</label>
+                    <input type="text" class="form-control" value="@Model.Name" disabled />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="@Model.Email" disabled />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">User Level</label>
+                    <input type="text" class="form-control" value="@Model.Level" disabled />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a asp-controller="Home" asp-action="Edit" class="btn btn-primary px-4">
+                    Ubah Profil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

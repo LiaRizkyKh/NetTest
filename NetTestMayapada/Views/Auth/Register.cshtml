@@ -1,0 +1,52 @@
+﻿﻿@using NetTestMayapada.ViewModels;
+@model RegisterViewModel;
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_LayoutBlank.cshtml";
+}
+
+<div class="card login-card p-4 p-md-5">
+    <form asp-action="Register" method="post" class="row g-3">
+        <div class="col-12 d-flex justify-content-center mb-2">
+            <img height="100"
+                 src="/images/bankmayapada.jpg"
+                 alt="User / App Logo">
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-12">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <div class="col-12">
+            <button type="submit" value="Register" class="btn btn-primary w-100 btn-signin">Register</button>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    Already have an account? <a asp-controller="Auth" asp-action="Login" class="text-decoration-none"> Login</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

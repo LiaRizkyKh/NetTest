@@ -1,0 +1,45 @@
+﻿﻿@using NetTestMayapada.ViewModels;
+@model LoginViewModel;
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LayoutBlank.cshtml";
+}
+<div class="card login-card p-4 p-md-5">
+    <form asp-action="Login" method="post" class="row g-3">
+        <div class="col-12 d-flex justify-content-center mb-2">
+            <img height="100"
+                 src="/images/bankmayapada.jpg"
+                 alt="User / App Logo">
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-12">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" value="Login" class="btn btn-primary w-100 btn-signin">Sign In</button>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6 d-flex">
+                    <a asp-controller="Auth" asp-action="VerifyEmail" class="text-decoration-none">
+                        Forgot password?
+                    </a>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <a asp-controller="Auth" asp-action="Register" class="text-decoration-none">Register</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
