@@ -37,7 +37,11 @@ namespace NetTestMayapada.Controllers
                     ModelState.AddModelError(string.Empty, "Email tidak ditemukan");
                     return View(model);
                 }
-
+                if (user.IsActive == false)
+                {
+                    ModelState.AddModelError("", "Akun sedang tidak aktif.");
+                    return View(model);
+                }
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, isPersistent: true, lockoutOnFailure: false);
 
                 if (result.Succeeded)
@@ -83,7 +87,8 @@ namespace NetTestMayapada.Controllers
                     Email = model.Email,
                     UserName = model.Email,
                     PhotoProfile = null,
-                    Level = ""
+                    Level = "",
+                    IsActive = true
                 };
 
                 var result = await userManager.CreateAsync(users, model.Password);

@@ -1,0 +1,68 @@
+﻿<script>
+    $(document).ready(function () {
+        var table = $('#usersTable').DataTable({
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: '/PengaturanUser/LoadData',
+                type: "GET",
+                datatype: "json"
+            },
+            columns: [
+                { data: "id", visible: false },
+                { data: "number", title: "No" },
+                {
+                    data: "id",
+                    title: "Action",
+                    render: function (id) {
+                        return `
+                            <a href="/PengaturanUser/Edit/${id}" class="btn btn-sm btn-warning me-2">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDelete(${id})">
+                                <i class="bi bi-trash"></i>
+                            </button>`;
+                    }
+                },
+                { data: "name", title: "Nama" },
+                { data: "email", title: "Email" },
+                { data: "level", title: "Level" },
+                {
+                    data: "photoProfile",
+                    title: "Foto Profil",
+                    render: function (data) {
+                        if (!data) {
+                            return '<img src="/images/default-profile.png" width="40" height="40" class="rounded-circle"/>';
+                        }
+                        return '<img src="' + data + '" width="40" height="40" class="rounded-circle"/>';
+                    }
+                },
+                {
+                    data: "isActive",
+                    title: "Status",
+                    render: function (data) {
+                        return data
+                            ? '<span class="badge bg-success">Active</span>'
+                            : '<span class="badge bg-secondary">Inactive</span>';
+                    }
+                }
+            ]
+        });
+    });
+
+    function confirmDelete(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+            $.ajax({
+                url: '/PengaturanUser/Delete/' + id,
+                type: 'POST',
+                success: function () {
+                    $('#usersTable').DataTable().ajax.reload();
+                },
+                error: function () {
+                    alert("Gagal menghapus data.");
+                }
+            });
+        }
+    }
+
+</script>

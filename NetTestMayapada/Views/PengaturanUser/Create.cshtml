@@ -1,0 +1,34 @@
+﻿@model NetTestMayapada.ViewModels.UserViewModel
+
+<div class="container mt-5 mb-3">
+    <div class="card shadow-lg p-4 mx-3">
+        <h3>Tambah User</h3>
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Nama</label>
+                <input asp-for="FullName" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Level</label>
+                <select asp-for="Level" class="form-select">
+                    <option value="Administrator">Administrator</option>
+                    <option value="User">User</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Foto Profil</label>
+                <input type="file" name="PhotoProfileFile" class="form-control" />
+            </div>
+            <div class="mb-3 form-check">
+                <input asp-for="isActive" class="form-check-input" />
+                <label class="form-check-label">Aktif</label>
+            </div>
+            <button type="submit" class="btn btn-success">Simpan</button>
+            <a asp-action="Index" class="btn btn-secondary">Batal</a>
+        </form>
+    </div>
+</div>

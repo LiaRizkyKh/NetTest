@@ -1,0 +1,32 @@
+﻿@* @model NetTestMayapada.ViewModels.UserViewModel *@
+@{
+    ViewData["Title"] = "Pengaturan User";
+}
+
+@section Styles{
+    <link href="/lib/datatables/datatables.css" rel="stylesheet">
+}
+
+<div class="container mt-5 mb-3">
+    <div class="card shadow-lg p-4 mx-3">
+        <h2>Pengaturan User</h2>
+
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a asp-controller="PengaturanUser" asp-action="Create" class="btn btn-primary px-4">
+                    Tambah User
+                </a>
+            </div>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col-12 text-center">
+                <table id="usersTable" class="table table-bordered table-striped" style="width:100%">
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/lib/datatables/datatables.min.js"></script>

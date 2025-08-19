@@ -20,7 +20,8 @@ public static class AppDbInitializer
                 FullName = "Super Admin",
                 Level = "Administrator",
                 PhotoProfile = "/images/default-profile.png",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsActive = true
             };
 
             var result = await userManager.CreateAsync(admin, "Admin1234");
@@ -39,7 +40,8 @@ public static class AppDbInitializer
                 FullName = "User Biasa",
                 Level = "User",
                 PhotoProfile = "/images/default-profile.png",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsActive = true
             };
 
             var result = await userManager.CreateAsync(normalUser, "User1234");
