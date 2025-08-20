@@ -34,13 +34,21 @@
                 {
                     responsivePriority: 2,
                     "data": "userNumber", "name": "", title: "Action", "orderable": false, "visible": true, "render": function (data, type, full, meta) {
-                        const email = JSON.stringify(full.email);
-                        return '<button class="btn btn-sm btn-warning  me-2" onclick="Edit(' + email + ')">'
-                            + '<i class="fa fa-pen color-white"></i>'
-                            + '  </button>'
-                            + '<button class="btn btn-sm btn-danger" onclick="Delete(' + email + ')">'
-                            + '<i class="fa fa-trash"></i>'
-                            + '  </button>';
+                        const email = String(full.email ?? full.Email ?? "");
+                        const emailAttr = $('<div>').text(email).html();
+                        return `
+                                  <button class="btn btn-sm btn-warning me-2 btn-edit"  data-email="${emailAttr}">
+                                    <i class="fa fa-pen color-white"></i>
+                                  </button>
+                                  <button class="btn btn-sm btn-danger btn-delete" data-email="${emailAttr}">
+                                    <i class="fa fa-trash"></i>
+                                  </button>`;
+                        // return '<button class="btn btn-sm btn-warning btn-edit me-2" data-email="${emailAttr}">'
+                        //     + '<i class="fa fa-pen color-white"></i>'
+                        //     + '  </button>'
+                        //     + '<button class="btn btn-sm btn-danger btn-delete" data-email="${emailAttr}">'
+                        //     + '<i class="fa fa-trash"></i>'
+                        //     + '  </button>';
                     }
                 },
                 {
@@ -79,6 +87,13 @@
             // "order": [[4, "asc"]]
         });
     }
+
+    $('#Table').on('click', '.btn-edit', function () {
+        Edit($(this).data('email'));
+    });
+    $('#Table').on('click', '.btn-delete', function () {
+        Delete($(this).data('email'));
+    });
 
     function Create() {
         ShowModal('bd-example-modal-lg');
