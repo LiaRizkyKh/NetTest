@@ -89,7 +89,7 @@ namespace NetTestMayapada.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View("_Create");
+            return View("Create");
         }
 
         [HttpPost]
@@ -152,46 +152,53 @@ namespace NetTestMayapada.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string email)
         {
-            var user = await _db.Users.FindAsync(id);
+            var user = await userManager.FindByEmailAsync(email);
             if (user == null) return NotFound();
 
-            var vm = new UserViewModel
+            var vm = new EditUserViewModel
             {
-                UserNumber = user.UserNumber,
+                Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
                 Level = user.Level,
-                PhotoProfile = user.PhotoProfile,
                 IsActive = user.IsActive
             };
             return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitEdit(UserViewModel model, IFormFile? PhotoProfileFile)
+        public async Task<IActionResult> SubmitEdit(EditUserViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _db.Users.FindAsync(model.UserNumber);
+            var user = await userManager.FindByIdAsync(model.Id);
             if (user == null) return NotFound();
 
+            _db.Attach(user);
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.Level = model.Level;
             user.IsActive = model.IsActive;
 
-            if (PhotoProfileFile != null)
+            if (model.PhotoProfileFile != null)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(PhotoProfileFile.FileName);
-                var path = Path.Combine("wwwroot/images/", fileName);
+                var fileName = Guid.NewGuid() + Path.GetExtension(model.PhotoProfileFile.FileName);
+                var path = Path.Combine("wwwroot/uploads/", fileName);
                 using var stream = new FileStream(path, FileMode.Create);
-                await PhotoProfileFile.CopyToAsync(stream);
-                user.PhotoProfile = "/images/" + fileName;
+                await model.PhotoProfileFile.CopyToAsync(stream);
+                user.PhotoProfile = "/uploads/" + fileName;
             }
 
-            _db.Users.Update(user);
+            var entry = _db.Entry(user);
+            entry.Property(x => x.FullName).IsModified = true;
+            entry.Property(x => x.Level).IsModified = true;
+            entry.Property(x => x.IsActive).IsModified = true;
+            entry.Property(x => x.PhotoProfile).IsModified = true;
+
+            entry.Property(x => x.UserNumber).IsModified = false;
+
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Index");

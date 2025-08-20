@@ -35,12 +35,12 @@ namespace NetTestMayapada.ViewModels
 
     public class EditUserViewModel
     {
-        public int UserNumber { get; set; }
+        public string Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Level { get; set; }
         public string Password { get; set; }
-        public string PhotoProfile { get; set; }
+        public IFormFile PhotoProfileFile { get; set; }
         public bool IsActive { get; set; }
     }
 }

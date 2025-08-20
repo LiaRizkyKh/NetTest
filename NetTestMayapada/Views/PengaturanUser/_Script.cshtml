@@ -43,12 +43,6 @@
                                   <button class="btn btn-sm btn-danger btn-delete" data-email="${emailAttr}">
                                     <i class="fa fa-trash"></i>
                                   </button>`;
-                        // return '<button class="btn btn-sm btn-warning btn-edit me-2" data-email="${emailAttr}">'
-                        //     + '<i class="fa fa-pen color-white"></i>'
-                        //     + '  </button>'
-                        //     + '<button class="btn btn-sm btn-danger btn-delete" data-email="${emailAttr}">'
-                        //     + '<i class="fa fa-trash"></i>'
-                        //     + '  </button>';
                     }
                 },
                 {
@@ -89,44 +83,14 @@
     }
 
     $('#Table').on('click', '.btn-edit', function () {
-        Edit($(this).data('email'));
+        const email = $(this).data('email');
+        const url = '@Url.Action("Edit", "PengaturanUser")' + '?email=' + encodeURIComponent(email);
+        window.location.href = url;
     });
+
     $('#Table').on('click', '.btn-delete', function () {
         Delete($(this).data('email'));
     });
-
-    function Create() {
-        ShowModal('bd-example-modal-lg');
-        State = "create";
-        UrlPartialView = '@Url.Action("Create", "PengaturanUser")';
-        LoadPartialViewData(UrlPartialView, function (data) {
-            $('#DivContentBody').hide();
-            $('#DivFormBody').append(data);
-            ValidationForm();
-        });
-    }
-
-    function Edit(id) {
-        State = "edit";
-        SearchData = { "id": id }
-        UrlPartialView = '@Url.Action("Edit", "PengaturanUser")';
-        LoadPartialViewData(UrlPartialView, function (data) {
-            $('#DivContentBody').hide();
-            $('#DivFormBody').append(data);
-            ValidationForm();
-        }, SearchData);
-    }
-
-    function View(id) {
-        State = "view";
-        SearchData = { "id": id }
-        UrlPartialView = '@Url.Action("View", "PengaturanUser")';
-        LoadPartialViewData(UrlPartialView, function (data) {
-            $('#DivContentBody').hide();
-            $('#DivFormBody').append(data);
-            ValidationForm();
-        }, SearchData);
-    }
 
     function Delete(id) {
         State = "delete";
