@@ -1,32 +1,44 @@
-﻿@* @model NetTestMayapada.ViewModels.UserViewModel *@
-@{
+﻿@{
     ViewData["Title"] = "Pengaturan User";
 }
 
-@section Styles{
+@section Styles {
     <link href="/lib/datatables/datatables.css" rel="stylesheet">
 }
+@section Scripts {
+    <script src="/lib/datatables/datatables.min.js"></script>
 
-<div class="container mt-5 mb-3">
-    <div class="card shadow-lg p-4 mx-3">
-        <h2>Pengaturan User</h2>
+    @Html.Partial("_Script")
+}
+<div id="DivContentBody">
+    <div class="container mt-5 mb-3">
+        <div class="card shadow-lg p-4 mx-3">
+            <h2>Pengaturan User</h2>
 
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a asp-controller="PengaturanUser" asp-action="Create" class="btn btn-primary px-4">
-                    Tambah User
-                </a>
+            <div class="row mt-4">
+                <div class="col-12 text-left">
+                    <a asp-controller="PengaturanUser" asp-action="Create" class="btn btn-primary px-4">
+                        Tambah User
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <div class="row align-items-center">
-            <div class="col-12 text-center">
-                <table id="usersTable" class="table table-bordered table-striped" style="width:100%">
-                </table>
+            <div class="row align-items-center">
+                <div class="col-12" style="overflow-x:auto;">
+                    <table id="Table" class="table table-bordered table-striped" style="width:100%;">
+                        <thead>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </thead>
+                    </table>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
-
-<script src="/lib/datatables/datatables.min.js"></script>
+<div id="DivFormBody"></div>

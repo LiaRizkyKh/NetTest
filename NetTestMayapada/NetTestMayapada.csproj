@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\datatables\" />
-    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

@@ -20,3 +20,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.fa-pen:before {
+    content: "\f304";
+    color: white;
+}

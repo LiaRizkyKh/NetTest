@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@{
+    var level = User.FindFirstValue("Level");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,6 +12,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NetTestMayapada.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css"/>
+    <link rel="stylesheet" href="~/lib/fontawesome-free-5.15.4-web/css/all.css" />
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-dI7hoLqYv7XKh9Wo4YzUHdq5oP+SptqYdzJ+3LjR1zzshUS0zZ5K8JblPrQG1iVnHgP7l1c1b4O2ZH4vlC2C6g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
     @await RenderSectionAsync("Styles", required: false)
 
 </head>
@@ -24,9 +34,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PengaturanUser" asp-action="Index">Pengaturan</a>
-                        </li>
+                        @if (level == "Administrator")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="PengaturanUser" asp-action="Index">Pengaturan</a>
+                            </li>
+                        }
+
                         <partial name="_LoginPartial" />
                     </ul>
                 </div>
@@ -47,6 +61,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -9,7 +9,7 @@ namespace NetTestMayapada.ViewModels
         public string Email { get; set; }
         public string Level { get; set; }
         public string PhotoProfile { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class LoadTableUserViewModel
@@ -20,6 +20,27 @@ namespace NetTestMayapada.ViewModels
         public string Email { get; set; }
         public string Level { get; set; }
         public string PhotoProfile { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class CreateUserViewModel
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Level { get; set; }
+        public string Password { get; set; }
+        public IFormFile PhotoProfileFile { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class EditUserViewModel
+    {
+        public int UserNumber { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Level { get; set; }
+        public string Password { get; set; }
+        public string PhotoProfile { get; set; }
+        public bool IsActive { get; set; }
     }
 }

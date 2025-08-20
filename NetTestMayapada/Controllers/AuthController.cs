@@ -53,7 +53,7 @@ namespace NetTestMayapada.Controllers
 
                     // Tambahkan claim custom
                     identity.AddClaim(new Claim("FullName", user.FullName ?? ""));
-                    identity.AddClaim(new Claim("Level", ""));
+                    identity.AddClaim(new Claim("Level", user.Level ?? ""));
                     identity.AddClaim(new Claim("Email", user.Email ?? ""));
                     identity.AddClaim(new Claim("IDUser", user.Id ?? ""));
                     identity.AddClaim(new Claim("PhotoProfile", user.PhotoProfile ?? "/images/default-profile.png"));

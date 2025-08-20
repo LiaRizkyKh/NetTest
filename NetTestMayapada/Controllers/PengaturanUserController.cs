@@ -13,16 +13,17 @@ namespace NetTestMayapada.Controllers
     [Authorize]
     public class PengaturanUserController : Controller
     {
-        private readonly UserManager<Users> _userManager;
+        private readonly UserManager<Users> userManager;
         private readonly ILogger<PengaturanUserController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly AppDbContext _db;
 
-        public PengaturanUserController(ILogger<PengaturanUserController> logger, IWebHostEnvironment env, AppDbContext db)
+        public PengaturanUserController(UserManager<Users> userManager, ILogger<PengaturanUserController> logger, IWebHostEnvironment env, AppDbContext db)
         {
             _logger = logger;
             _env = env;
             _db = db;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -50,55 +51,104 @@ namespace NetTestMayapada.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadData()
         {
-            var users = await _db.Users
-                .Select((u, index) => new LoadTableUserViewModel
+            try
+            {
+                var list = await _db.Users
+                .AsNoTracking()
+                .OrderBy(u => u.UserNumber)
+                .Select(u => new
+                {
+                    u.UserNumber,
+                    u.FullName,
+                    u.Email,
+                    u.Level,
+                    u.PhotoProfile,
+                    u.IsActive
+                })
+                .ToListAsync();
+
+                var users = list.Select((u, i) => new LoadTableUserViewModel
                 {
                     UserNumber = u.UserNumber,
-                    number = index + 1,
+                    number = i + 1,
                     FullName = u.FullName,
                     Email = u.Email,
                     Level = u.Level,
                     PhotoProfile = u.PhotoProfile,
-                    isActive = u.IsActive
-                })
-                .ToListAsync();
+                    IsActive = u.IsActive
+                }).ToList();
 
-            return Json(new { data = users });
+                return Json(new { data = users });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View("_Create");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserViewModel model, IFormFile? PhotoProfileFile)
+        public async Task<IActionResult> SubmitCreate(CreateUserViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
-
-            string photoPath = null;
-            if (PhotoProfileFile != null)
+            try
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(PhotoProfileFile.FileName);
-                var path = Path.Combine("wwwroot/images/", fileName);
-                using var stream = new FileStream(path, FileMode.Create);
-                await PhotoProfileFile.CopyToAsync(stream);
-                photoPath = "/images/" + fileName;
+                if (!ModelState.IsValid)
+                {
+                    TempData["ToastrError"] = "Harap isi semua field!";
+                    return View(model);
+                }
+
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    ModelState.AddModelError(nameof(model.Password), "Password dan konfirmasi harus sama.");
+                    return View(model);
+                }
+
+                string? photoRelativePath = null;
+                if (model.PhotoProfileFile != null && model.PhotoProfileFile.Length > 0)
+                {
+                    var uploadFolder = Path.Combine(_env.WebRootPath, "uploads");
+                    Directory.CreateDirectory(uploadFolder);
+
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(model.PhotoProfileFile.FileName)}";
+                    var filePath = Path.Combine(uploadFolder, fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await model.PhotoProfileFile.CopyToAsync(stream);
+                    }
+
+                    photoRelativePath = $"/uploads/{fileName}".Replace("\\", "/");
+                }
+
+                Users user = new Users
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FullName = model.FullName,
+                    Level = model.Level,
+                    IsActive = model.IsActive,
+                    PhotoProfile = model.PhotoProfileFile.FileName ?? "/images/default-profile.png"
+                };
+
+                var result = await userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                {
+                    foreach (var err in result.Errors) ModelState.AddModelError("", err.Description);
+                    return View(model);
+                }
+
+                return RedirectToAction("Index");
             }
-
-            var user = new Users
+            catch (Exception ex)
             {
-                FullName = model.FullName,
-                Email = model.Email,
-                Level = model.Level,
-                PhotoProfile = photoPath,
-                IsActive = model.isActive
-            };
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpGet]
@@ -114,13 +164,13 @@ namespace NetTestMayapada.Controllers
                 Email = user.Email,
                 Level = user.Level,
                 PhotoProfile = user.PhotoProfile,
-                isActive = user.IsActive
+                IsActive = user.IsActive
             };
             return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserViewModel model, IFormFile? PhotoProfileFile)
+        public async Task<IActionResult> SubmitEdit(UserViewModel model, IFormFile? PhotoProfileFile)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -130,7 +180,7 @@ namespace NetTestMayapada.Controllers
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.Level = model.Level;
-            user.IsActive = model.isActive;
+            user.IsActive = model.IsActive;
 
             if (PhotoProfileFile != null)
             {
@@ -147,31 +197,28 @@ namespace NetTestMayapada.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(string email)
         {
-            var user = await _db.Users.FindAsync(id);
-            if (user == null) return NotFound();
-
-            var vm = new UserViewModel
+            try
             {
-                UserNumber = user.UserNumber,
-                FullName = user.FullName,
-                Email = user.Email
-            };
-            return View(vm);
-        }
+                var user = await userManager.FindByEmailAsync(email);
+                if (user == null) return NotFound();
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var user = await _db.Users.FindAsync(id);
-            if (user == null) return NotFound();
+                var result = await userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    TempData["ToastrError"] = "Data gagal dihapus";
+                    return RedirectToAction("Delete");
+                }
 
-            _db.Users.Remove(user);
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["ToastrError"] = "Data gagal dihapus";
+                return RedirectToAction("Index");
+            }
         }
     }
 }
